@@ -2,20 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer components{
+    .menu{
+        @apply mx-10 py-5;
+    }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+    .menu ul{
+        @apply list-none;
+    }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    .menu a{
+        @apply no-underline;
+    }
+
+    .spinner{
+        @apply flex justify-center items-center;
+        & div{
+            @apply animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500;
+        }
+    }
+
+    .cabecalho{
+        @apply flex justify-between items-center text-2xl;
+
+        & li{
+            @apply mr-20 inline;
+
+             & a{
+                @apply text-gray-600 hover:text-gray-900 hover:underline;
+             }
+
+        }
+    }
+
+    .tabelaProd{
+        @apply border-2 border-gray-700 m-auto w-10/12 bg-black shadow-lg shadow-gray-600 font-sans font-bold;
+
+        & th,td{
+            @apply text-center text-white border-2 border-white py-5;
+        }
+
+        & tbody tr{
+            @apply hover:bg-slate-500;
+        }
+
+    }
+
 }
