@@ -22,30 +22,8 @@
         }
     }
 
-    .cabecalho{
-        @apply flex justify-between items-center text-2xl;
+ 
 
-        & li{
-            @apply mr-20 inline;
 
-             & a{
-                @apply text-gray-600 hover:text-gray-900 hover:underline;
-             }
-
-        }
-    }
-
-    .tabelaProd{
-        @apply border-2 border-gray-700 m-auto w-10/12 bg-black shadow-lg shadow-gray-600 font-sans font-bold;
-
-        & th,td{
-            @apply text-center text-white border-2 border-white py-5;
-        }
-
-        & tbody tr{
-            @apply hover:bg-slate-500;
-        }
-
-    }
 
 }
