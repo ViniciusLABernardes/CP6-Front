@@ -1,8 +1,8 @@
 
 import Cabecalho from "@/components/Cabecalho/Cabecalho";
-import Rodape from "@/components/Rodape/Rodape";
 import type { Metadata } from "next";
 import "@/app/globals.css"
+import Rodape from "@/components/Rodape/Rodape";
 
 export const metadata: Metadata = {
   title: "Fiap Notas",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1.0,
-  colorScheme: "light"
+  colorScheme: "dark"
 }
 
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
