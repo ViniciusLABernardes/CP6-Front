@@ -91,7 +91,7 @@ export default function CadAlunos() {
 
   return (
     <div>
-        <h1>Cadastrar Notas</h1>
+        <h1>Cadastrar Nota</h1>
         <div>
         <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
          

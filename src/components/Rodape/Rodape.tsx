@@ -15,10 +15,10 @@ export default function Rodape(){
         chamadaApi();
     },[]);
     return(
-        <footer className="rodape">
+        <footer className="rodape text-center pt-10">
            
             <h2>Desenvolvido por:</h2>
-            <ul className="lista-alunos flex items-center justify-evenly ">
+            <ul className=" md:flex-row lista-alunos items-center justify-evenly pt-10 pb-10  ">
                 {Alunos.map((p) => (
                         <li key={p.id}>
                             <p className="nome-aluno-footer">{p.nome}</p>

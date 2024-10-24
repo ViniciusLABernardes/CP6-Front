@@ -15,6 +15,7 @@ import {
     Legend,
   } from 'chart.js';
   import { Line } from 'react-chartjs-2';
+import Link from "next/link";
   
   ChartJS.register(
     CategoryScale,
@@ -26,21 +27,6 @@ import {
     Legend
   );
   
-  const dadosGraficoPorAluno = [
-    {
-      dados: {
-        labels: ["Checkpoint 1", "Checkpoint 2", "Challenge", "Global Solution"],
-        datasets: [
-          {
-            label: "Notas",
-            data: [85, 90, 88, 92], 
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          },
-        ],
-      },
-    },
-  ];
 
 export default function Alunos() {
 
@@ -137,13 +123,13 @@ export default function Alunos() {
                                     </h3>
                                 </div>
                             </div>
-                            <div className="w-[300px] h-[300px]">
+                            <div className="w-[80%] h-[240px] md:w-[80%] md:h-[300px] ">
                                  <Line data={dadosGraficoPorAluno[index].dados} options={responsividadeGrafico}/>
                             </div>
                            
                             
                             <div className="bg-red-500 rounded-lg w-full py-2 mb-6 text-center hover:bg-red-700 duration-300 hover:shadow-lg  cursor-pointer">
-                                    <button type="submit">Acessar Perfil</button> 
+                            <Link href={`/alunos/${a.id}`}>Acessar Perfil</Link>
                             </div>
                             
                          </div>
