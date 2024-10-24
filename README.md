@@ -1,5 +1,7 @@
 # CP Front
 
+## Instalação biblioteca graficos: npm install chart.js react-chartjs-2 --force
+
 Participantes:
   Brendon de Paula Brasil - RM 559196
   
