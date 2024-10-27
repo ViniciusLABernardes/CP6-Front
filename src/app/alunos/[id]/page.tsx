@@ -25,6 +25,9 @@ export default function AtualizarNota() {
   const [novaNota, setNovaNota] = useState({ nomeAtividade: "", nota: 0 });
   const [alterarNota, setAlterarNota] = useState({ index: -1, tipo: "", nota: 0 });
   const [showModal, setShowModal] = useState(false);
+  const [isEditingCp, setIsEditingCp] = useState(-1);
+  const [isEditingChallenge, setIsEditingChallenge] = useState(-1);
+  const [isEditingGlobal, setIsEditingGlobal] = useState(-1);
 
   useEffect(() => {
     const chamadaApi = async () => {
@@ -102,101 +105,141 @@ export default function AtualizarNota() {
       {aluno ? (
         <>
           <div className="flex flex-col w-1/3 space-y-6">
-            {/* Checkpoints */}
             <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-pink-400">Checkpoints</h3>
               <div className="flex space-x-2 mt-3">
                 {aluno.notasCp.map((nota, index) => (
-                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                  <div
+                    key={index}
+                    className="p-3 bg-gray-700 rounded-md text-center w-16 relative"
+                    onMouseEnter={() => setIsEditingCp(index)}
+                    onMouseLeave={() => setIsEditingCp(-1)}
+                  >
                     {nota}
-                    <button
-                      onClick={() => {
-                        setAlterarNota({ index, tipo: "Cp", nota });
-                        setShowModal(true);
-                      }}
-                      className="absolute top-0 right-0 text-xs text-yellow-300"
-                    >
-                      ✏️
-                    </button>
+                    {isEditingCp === index && (
+                      <>
+                        <button
+                          onClick={() => {
+                            setAlterarNota({ index, tipo: "Cp", nota });
+                            setShowModal(true);
+                          }}
+                          className="absolute top-0 right-0 text-xs text-yellow-300"
+                        >
+                          ✏️
+                        </button>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
             </section>
-            {/* Sprints */}
             <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-yellow-400">Sprints</h3>
               <div className="flex space-x-2 mt-3">
                 {aluno.notasChallenge.map((nota, index) => (
-                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                  <div
+                    key={index}
+                    className="p-3 bg-gray-700 rounded-md text-center w-16 relative"
+                    onMouseEnter={() => setIsEditingChallenge(index)}
+                    onMouseLeave={() => setIsEditingChallenge(-1)}
+                  >
                     {nota}
-                    <button
-                      onClick={() => {
-                        setAlterarNota({ index, tipo: "Challenge", nota });
-                        setShowModal(true);
-                      }}
-                      className="absolute top-0 right-0 text-xs text-yellow-300"
-                    >
-                      ✏️
-                    </button>
+                    {isEditingChallenge === index && (
+                      <button
+                        onClick={() => {
+                          setAlterarNota({ index, tipo: "Challenge", nota });
+                          setShowModal(true);
+                        }}
+                        className="absolute top-0 right-0 text-xs text-yellow-300"
+                      >
+                        ✏️
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
             </section>
-            {/* Global Solutions */}
             <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-green-400">Global Solutions</h3>
               <div className="flex space-x-2 mt-3">
                 {aluno.notasGlobal.map((nota, index) => (
-                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                  <div
+                    key={index}
+                    className="p-3 bg-gray-700 rounded-md text-center w-16 relative"
+                    onMouseEnter={() => setIsEditingGlobal(index)}
+                    onMouseLeave={() => setIsEditingGlobal(-1)}
+                  >
                     {nota}
-                    <button
-                      onClick={() => {
-                        setAlterarNota({ index, tipo: "Global", nota });
-                        setShowModal(true);
-                      }}
-                      className="absolute top-0 right-0 text-xs text-yellow-300"
-                    >
-                      ✏️
-                    </button>
+                    {isEditingGlobal === index && (
+                      <button
+                        onClick={() => {
+                          setAlterarNota({ index, tipo: "Global", nota });
+                          setShowModal(true);
+                        }}
+                        className="absolute top-0 right-0 text-xs text-yellow-300"
+                      >
+                        ✏️
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
             </section>
           </div>
 
-          {/* Gráfico de Notas */}
           <div className="flex flex-col w-1/3 items-center justify-center">
             <h3 className="text-2xl font-semibold text-yellow-400 mb-4">Gráfico de Notas</h3>
             <Bar data={data} options={{ responsive: true, plugins: { legend: { display: false } } }} />
           </div>
 
-          {/* Adicionar Nota */}
           <div className="flex flex-col w-1/3 space-y-6">
             <form onSubmit={handleAddNota} className="flex flex-col bg-gray-800 p-5 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-purple-400 mb-4">Adicionar Nota</h3>
-              <input type="text" value={novaNota.nomeAtividade} onChange={(e) => setNovaNota({ ...novaNota, nomeAtividade: e.target.value })} required className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md" placeholder="Nome da Atividade" />
-              <input type="number" value={novaNota.nota} onChange={(e) => setNovaNota({ ...novaNota, nota: parseFloat(e.target.value) })} required className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md" placeholder="Nota" />
-              <button type="submit" className="bg-purple-600 text-white font-bold py-2 px-4 rounded-md hover:bg-purple-500 mt-3">
+              <input
+                type="text"
+                value={novaNota.nomeAtividade}
+                onChange={(e) => setNovaNota({ ...novaNota, nomeAtividade: e.target.value })}
+                required
+                className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+                placeholder="Nome da Atividade"
+              />
+              <input
+                type="number"
+                value={novaNota.nota}
+                onChange={(e) => setNovaNota({ ...novaNota, nota: parseFloat(e.target.value) })}
+                required
+                className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+                placeholder="Nota"
+              />
+              <button
+                type="submit"
+                className="bg-purple-600 text-white font-bold py-2 px-4 rounded-md hover:bg-purple-500 mt-3"
+              >
                 Adicionar Nota
               </button>
             </form>
           </div>
 
-          {/* Modal para alterar a nota */}
           {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                <h3 className="text-xl font-semibold text-yellow-400 mb-4">Alterar Nota</h3>
+                <h2 className="text-lg font-bold text-yellow-400">Editar Nota</h2>
                 <input
                   type="number"
                   value={alterarNota.nota}
                   onChange={(e) => setAlterarNota({ ...alterarNota, nota: parseFloat(e.target.value) })}
-                  className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md mb-4"
+                  className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
                 />
-                <button onClick={handleEditNota} className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-500 mr-2">
-                  Confirmar
+                <button
+                  onClick={handleEditNota}
+                  className="bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-500 mt-3"
+                >
+                  Atualizar
                 </button>
-                <button onClick={() => setShowModal(false)} className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-500">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-500 mt-3"
+                >
                   Cancelar
                 </button>
               </div>
@@ -204,7 +247,7 @@ export default function AtualizarNota() {
           )}
         </>
       ) : (
-        <p>Carregando dados do aluno...</p>
+        <div>Carregando...</div>
       )}
     </div>
   );
