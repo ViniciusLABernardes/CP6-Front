@@ -4,35 +4,33 @@ import { useParams } from "next/navigation";
 import { TipoAluno } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function AtualizarNota({ params }: { params: { id: number } }) {
-const { id } = useParams();
+export default function AtualizarNota() {
+  const { id } = useParams();
   const navigate = useRouter();
 
-  const [Aluno, setAluno] = useState<TipoAluno>({
-    id: 0,
-    nome: "",
-    rm: 0,
-    imagem:"",
-    notasCp: [0, 0, 0, 0, 0, 0],
-    notasChallenge: [0, 0, 0, 0],
-    notasGlobal: [0, 0],
-    notaNova: { nomeAtividade: "", nota: 0 }
-  });
-  type Atividades = "notasCp" | "notasChallenge" | "notasGlobal";
-
-  const [atividadeSelecionada, setAtividadeSelecionada] = useState<Atividades>("notasCp");
- 
-  const [notaIndex, setNotaIndex] = useState(0); // 
+  const [aluno, setAluno] = useState<TipoAluno | null>(null);
+  const [novaNota, setNovaNota] = useState({ nomeAtividade: "", nota: 0 });
+  const [alterarNota, setAlterarNota] = useState({ index: -1, tipo: "", nota: 0 });
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const chamadaApi = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/aluno/${id}`);
-        if (!response.ok) {
-          throw new Error("Erro ao buscar dados do aluno");
-        }
+        if (!response.ok) throw new Error("Erro ao buscar dados do aluno");
         const data = await response.json();
         setAluno(data);
       } catch (error) {
@@ -40,84 +38,174 @@ const { id } = useParams();
       }
     };
     chamadaApi();
-  }, [params]);
+  }, [id]);
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-   
-    setAtividadeSelecionada(e.target.value as Atividades);
-  };
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = parseFloat(e.target.value);
-  
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddNota = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (aluno) {
+      const updatedAluno = { ...aluno, notasCp: [...aluno.notasCp, novaNota.nota] };
+      try {
+        const response = await fetch(`http://localhost:3000/api/aluno/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedAluno),
+        });
+        if (response.ok) {
+          alert("Nota adicionada com sucesso.");
+          setAluno(updatedAluno);
+          setNovaNota({ nomeAtividade: "", nota: 0 });
+        }
+      } catch (error) {
+        console.error("Erro ao adicionar nota!", error);
+      }
+    }
+  };
 
+  const handleEditNota = async () => {
+    const updatedAluno = { ...aluno };
+    if (alterarNota.tipo === "Cp") updatedAluno.notasCp[alterarNota.index] = alterarNota.nota;
+    else if (alterarNota.tipo === "Challenge") updatedAluno.notasChallenge[alterarNota.index] = alterarNota.nota;
+    else if (alterarNota.tipo === "Global") updatedAluno.notasGlobal[alterarNota.index] = alterarNota.nota;
     try {
       const response = await fetch(`http://localhost:3000/api/aluno/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(Aluno)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedAluno),
       });
-
       if (response.ok) {
         alert("Nota atualizada com sucesso.");
-        navigate.push("/alunos");
+        setAluno(updatedAluno);
+        setShowModal(false);
       }
-
     } catch (error) {
       console.error("Erro ao atualizar nota!", error);
     }
   };
-  const [Aluno, setAluno] = useState<TipoAluno | null>(null);
+
+  const data = {
+    labels: ["Checkpoints", "Sprints", "Global Solutions"],
+    datasets: [
+      {
+        label: "Notas",
+        data: [
+          aluno?.notasCp?.reduce((a, b) => a + b, 0) / aluno?.notasCp.length || 0,
+          aluno?.notasChallenge?.reduce((a, b) => a + b, 0) / aluno?.notasChallenge.length || 0,
+          aluno?.notasGlobal[0] || 0,
+        ],
+        backgroundColor: ["#f87171", "#fbbf24", "#34d399"],
+      },
+    ],
+  };
+
   return (
-    <div>
-      {Aluno ? ( // Verifica se o aluno já foi carregado
-        <div>
-          <h2>Aluno</h2>
-  
-          <div>
-            <form className="" onSubmit={handleSubmit}>
-              <h2>De qual atividade você deseja alterar a nota?</h2>
-              <select value={atividadeSelecionada} onChange={handleSelectChange}>
-                <option value="notasCp">Notas CPs</option>
-                <option value="notasChallenge">Notas Challenges</option>
-                <option value="notasGlobal">Notas Global</option>
-              </select>
-  
-              <div className="mb-5">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">
-                  Nota
-                </label>
-                <input
-                  type="number"
-                  id="idNota"
-                  name="nota"
-                  value={Aluno[atividadeSelecionada][notaIndex]} // Verifica se o valor está pronto
-                  onChange={(e) => handleInputChange(e, notaIndex)} 
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Nota"
-                  required
-                />
+    <div className="flex flex-row p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6">
+      {aluno ? (
+        <>
+          <div className="flex flex-col w-1/3 space-y-6">
+            {/* Checkpoints */}
+            <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold text-pink-400">Checkpoints</h3>
+              <div className="flex space-x-2 mt-3">
+                {aluno.notasCp.map((nota, index) => (
+                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                    {nota}
+                    <button
+                      onClick={() => {
+                        setAlterarNota({ index, tipo: "Cp", nota });
+                        setShowModal(true);
+                      }}
+                      className="absolute top-0 right-0 text-xs text-yellow-300"
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                ))}
               </div>
-  
-              <div>
-                <button
-                  type="submit"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Alterar Nota
-                </button>
+            </section>
+            {/* Sprints */}
+            <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold text-yellow-400">Sprints</h3>
+              <div className="flex space-x-2 mt-3">
+                {aluno.notasChallenge.map((nota, index) => (
+                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                    {nota}
+                    <button
+                      onClick={() => {
+                        setAlterarNota({ index, tipo: "Challenge", nota });
+                        setShowModal(true);
+                      }}
+                      className="absolute top-0 right-0 text-xs text-yellow-300"
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                ))}
               </div>
+            </section>
+            {/* Global Solutions */}
+            <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold text-green-400">Global Solutions</h3>
+              <div className="flex space-x-2 mt-3">
+                {aluno.notasGlobal.map((nota, index) => (
+                  <div key={index} className="p-3 bg-gray-700 rounded-md text-center w-16 relative">
+                    {nota}
+                    <button
+                      onClick={() => {
+                        setAlterarNota({ index, tipo: "Global", nota });
+                        setShowModal(true);
+                      }}
+                      className="absolute top-0 right-0 text-xs text-yellow-300"
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Gráfico de Notas */}
+          <div className="flex flex-col w-1/3 items-center justify-center">
+            <h3 className="text-2xl font-semibold text-yellow-400 mb-4">Gráfico de Notas</h3>
+            <Bar data={data} options={{ responsive: true, plugins: { legend: { display: false } } }} />
+          </div>
+
+          {/* Adicionar Nota */}
+          <div className="flex flex-col w-1/3 space-y-6">
+            <form onSubmit={handleAddNota} className="flex flex-col bg-gray-800 p-5 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold text-purple-400 mb-4">Adicionar Nota</h3>
+              <input type="text" value={novaNota.nomeAtividade} onChange={(e) => setNovaNota({ ...novaNota, nomeAtividade: e.target.value })} required className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md" placeholder="Nome da Atividade" />
+              <input type="number" value={novaNota.nota} onChange={(e) => setNovaNota({ ...novaNota, nota: parseFloat(e.target.value) })} required className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md" placeholder="Nota" />
+              <button type="submit" className="bg-purple-600 text-white font-bold py-2 px-4 rounded-md hover:bg-purple-500 mt-3">
+                Adicionar Nota
+              </button>
             </form>
           </div>
-        </div>
+
+          {/* Modal para alterar a nota */}
+          {showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 className="text-xl font-semibold text-yellow-400 mb-4">Alterar Nota</h3>
+                <input
+                  type="number"
+                  value={alterarNota.nota}
+                  onChange={(e) => setAlterarNota({ ...alterarNota, nota: parseFloat(e.target.value) })}
+                  className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md mb-4"
+                />
+                <button onClick={handleEditNota} className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-500 mr-2">
+                  Confirmar
+                </button>
+                <button onClick={() => setShowModal(false)} className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-500">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       ) : (
-        <p>Carregando dados do aluno...</p> // Exibe um loading enquanto os dados não carregam
+        <p>Carregando dados do aluno...</p>
       )}
     </div>
   );
-}
 }
