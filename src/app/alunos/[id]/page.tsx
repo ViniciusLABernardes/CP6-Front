@@ -98,10 +98,10 @@ export default function AtualizarNota() {
   };
 
   return (
-    <div className="flex flex-row p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6">
+    <div className="flex flex-col p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6 md:flex-row">
       {aluno ? (
         <>
-          <div className="flex flex-col w-1/3 space-y-6">
+          <div className="flex flex-col w-full space-y-6 md:w-1/3">
             {/* Nome do Aluno */}
             <h2 className="text-3xl font-bold text-yellow-400 mb-4 text-center">{aluno.nome}</h2>
 
@@ -164,7 +164,7 @@ export default function AtualizarNota() {
             </section>
           </div>
 
-          <div className="flex flex-col w-1/3 items-center justify-start">
+          <div className="flex flex-col w-full items-center justify-start md:w-1/3">
             <h3 className="text-2xl font-semibold text-yellow-400 mb-4">Gráfico de Notas</h3>
             <div className="bg-gray-900 p-6 rounded-lg shadow-lg h-96 flex items-center justify-center">
               <div className="w-full h-full">
@@ -182,7 +182,7 @@ export default function AtualizarNota() {
             </div>
           </div>
 
-          <div className="flex flex-col w-1/3 space-y-6">
+          <div className="flex flex-col w-full space-y-6 md:w-1/3">
             <form onSubmit={handleAddNota} className="flex flex-col bg-gray-800 p-5 rounded-lg shadow-lg">
               <h3 className="text-2xl font-semibold text-purple-400 mb-4">Adicionar Nota</h3>
               <input type="text" value={novaNota.nomeAtividade} onChange={(e) => setNovaNota({ ...novaNota, nomeAtividade: e.target.value })} required className="mt-1 block w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-md" placeholder="Nome da Atividade" />
