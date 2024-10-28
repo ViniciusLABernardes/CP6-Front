@@ -1,15 +1,16 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 
 export default function ErrorComponent(){
 return(
-    <div className="bg-white">
-        <h2>Esta página não existe, para voltar para página inicial, clique aqui!</h2>
+    <div className="bg-white flex flex-col justify-center items-center content-center">
+        <h2 className='text-black text-2xl pt-10 pb-6'>Página não encontrada, clique <Link href="/" className='text-red-500 text-2xl font-bold'>aqui</Link> para voltar para página inicial</h2>
         <Image
-      src="/CP6-Front\src\img\stitch.jpg"
+      src="/img/stitch.jpg"
       width={500}
       height={500}
-      alt="Stitch triste"
+      alt="Picture of the author"
     />
     </div>
 )
