@@ -2,8 +2,7 @@ import { TipoAluno } from "@/types";
 import { promises as fs } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
-
-export async function GET(request: NextRequest, { params }: any) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     const file = await fs.readFile(process.cwd() + '/src/data/base.json', 'utf-8');
     const dados: TipoAluno[] = JSON.parse(file);
   
@@ -16,6 +15,7 @@ export async function GET(request: NextRequest, { params }: any) {
   
     return NextResponse.json(aluno);
   }
+  
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     const file = await fs.readFile(process.cwd() + '/src/data/base.json', 'utf-8');
