@@ -28,3 +28,5 @@ Tecnologias Utilizadas
 React: Para construção da interface do usuário.
 Chart.js: Para renderização dos gráficos.
 React-Chartjs-2: Integração do Chart.js com React.
+
+### Link repositório: https://github.com/ViniciusLABernardes/CP6-Front
