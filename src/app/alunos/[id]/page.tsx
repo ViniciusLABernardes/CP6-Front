@@ -98,10 +98,10 @@ export default function AtualizarNota() {
   };
 
     return (
-      <div className="flex flex-row p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6">
+      <div className="flex flex-col p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6 md:flex-row">
         {aluno ? (
           <>
-            <div className="flex flex-col w-1/3 space-y-6">
+            <div className="flex flex-col w-full  space-y-6 md:text-sm md:w-1/3 ">
               <section className="p-5 bg-gray-800 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-semibold text-pink-400">Checkpoints</h3>
                 <div className="flex space-x-2 mt-3">
@@ -179,15 +179,15 @@ export default function AtualizarNota() {
               </section>
             </div>
     
-            <div className="flex flex-col w-1/3 items-center justify-top">
+            <div className="flex flex-col w-full items-center justify-top md:w-1/3">
               <h2 className="text-3xl font-bold text-white mb-4">{aluno?.nome}</h2>
               <h3 className="text-2xl font-semibold text-yellow-400 mb-4">Gráfico de Notas</h3>
-              <div className="bg-gray-800 w-full">
-                <Bar data={data} options={{ responsive: true, plugins: { legend: { display: false } } }} />
+              <div className="bg-gray-800 w-full ">
+                <Bar data={data} options={{ plugins: { legend: { display: false } } }} />
               </div>
             </div>
     
-            <div className="flex flex-col w-1/3 space-y-6">
+            <div className="flex flex-col w-full space-y-6 md:w-1/3">
               <form onSubmit={handleAddNota} className="flex flex-col bg-gray-800 p-5 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-semibold text-purple-400 mb-4">Adicionar Nota</h3>
                 <input
