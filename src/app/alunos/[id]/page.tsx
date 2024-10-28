@@ -98,7 +98,7 @@ export default function AtualizarNota() {
   };
 
     return (
-      <div className="flex flex-col p-5 bg-[#1e1e1e] min-h-screen text-white space-x-6 md:flex-row">
+      <div className="flex flex-col p-5 bg-[#1e1e1e] gap-6 text-white space-x-6 md:flex-row">
         {aluno ? (
           <>
             <div className="flex flex-col w-full  space-y-6 md:text-sm md:w-1/3 ">
@@ -108,7 +108,7 @@ export default function AtualizarNota() {
                   {aluno.notasCp.map((nota, index) => (
                     <div
                       key={index}
-                      className="p-3 bg-gray-700 rounded-md text-center w-16 relative"
+                      className="p-3 bg-gray-700 rounded-md text-center w-14 relative"
                       onMouseEnter={() => setAlterarNota({ index, tipo: "Cp", nota })}
                       onMouseLeave={() => setAlterarNota({ index: -1, tipo: "", nota: 0 })}
                     >
