@@ -1,16 +1,18 @@
 import { TipoAluno } from "@/types";
 import { promises as fs } from "fs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
     const file = await fs.readFile(process.cwd() + '/src/data/base.json', 'utf-8');
     const dados: TipoAluno[] = JSON.parse(file);
   
-    const alunoId = parseInt(params.id, 10);
+    // Converte `params.id` para número
+    const alunoId = parseInt(context.params.id, 10);
     const aluno = dados.find(p => p.id === alunoId);
   
     return NextResponse.json(aluno);
-}
+  }
 
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
