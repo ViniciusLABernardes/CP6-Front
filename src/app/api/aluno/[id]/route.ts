@@ -4,13 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(request: NextRequest, { params }: { params: Record<string, string> }) {
-
+    // @ts-ignore
     const file = await fs.readFile(process.cwd() + '/src/data/base.json', 'utf-8');
-
     const dados: TipoAluno[] = JSON.parse(file);
-
     const alunoId = parseInt(params.id, 10);
-
     const aluno = dados.find(p => p.id === alunoId);
 
     if (!aluno) {
