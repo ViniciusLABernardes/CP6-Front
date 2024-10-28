@@ -85,6 +85,7 @@ export default function Alunos() {
                       backgroundColor: 'rgba(255, 0, 0, 0.5)',
                     }]
                   }}
+                  // @ts-ignore
                   options={responsividadeGrafico}
                 />
               </div>

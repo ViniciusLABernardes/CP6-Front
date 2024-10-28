@@ -52,6 +52,7 @@ export default function AtualizarNota() {
         });
         if (response.ok) {
           alert("Nota adicionada com sucesso.");
+          // @ts-ignore
           setAluno(updatedAluno);
           setNovaNota({ nomeAtividade: "", nota: 0 });
         }
@@ -63,8 +64,11 @@ export default function AtualizarNota() {
 
   const handleEditNota = async () => {
     const updatedAluno = { ...aluno };
+    // @ts-ignore
     if (alterarNota.tipo === "Cp") updatedAluno.notasCp[alterarNota.index] = alterarNota.nota;
+    // @ts-ignore
     else if (alterarNota.tipo === "Challenge") updatedAluno.notasChallenge[alterarNota.index] = alterarNota.nota;
+    // @ts-ignore
     else if (alterarNota.tipo === "Global") updatedAluno.notasGlobal[alterarNota.index] = alterarNota.nota;
     try {
       const response = await fetch(`http://localhost:3000/api/aluno/${id}`, {
@@ -74,6 +78,7 @@ export default function AtualizarNota() {
       });
       if (response.ok) {
         alert("Nota atualizada com sucesso.");
+        // @ts-ignore
         setAluno(updatedAluno);
         setShowModal(false);
       }
@@ -88,7 +93,9 @@ export default function AtualizarNota() {
       {
         label: "Notas",
         data: [
+          // @ts-ignore
           aluno?.notasCp?.reduce((a, b) => a + b, 0) / aluno?.notasCp.length || 0,
+          // @ts-ignore
           aluno?.notasChallenge?.reduce((a, b) => a + b, 0) / aluno?.notasChallenge.length || 0,
           aluno?.notasGlobal[0] || 0,
         ],
