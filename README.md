@@ -16,7 +16,7 @@ O **CP Front** é uma aplicação desenvolvida para apresentar dados de alunos e
 *Brendon de Paula Brasil - RM 559196*
 *David Gomes - RM 556607*
 *Gustavo Gomes - RM 555999*
-*João Ganança - RM (aguardando RM)*
+*João Ganança - RM 556405*
 *Vinicius Leandro - RM 554728*
 
 Como Contribuir
